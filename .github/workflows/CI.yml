@@ -28,6 +28,10 @@ on:
         description: Update wait time
         required: true
         default: 86400
+      limit:
+        description: limit
+        required: true
+        default: 2000
       args:
         description: args
         required: false
@@ -58,4 +62,4 @@ jobs:
       - run: |
           git config --local user.name github-actions[bot]
           git config --local user.email 41898282+github-actions[bot]@users.noreply.github.com
-          python main.py -l ${{ github.event.inputs.level || 'INFO' }} -p ${{ github.event.inputs.pool || 8 }} -r ${{ github.event.inputs.retry || 3 }} -t ${{ github.event.inputs.time || 86400 }} -limit 2000 -k ${{ secrets.KEY }} ${{ github.event.inputs.args }}
+          python main.py -l ${{ github.event.inputs.level || 'INFO' }} -p ${{ github.event.inputs.pool || 8 }} -r ${{ github.event.inputs.retry || 3 }} -t ${{ github.event.inputs.time || 86400 }} -limit ${{ github.event.inputs.limit || 2000 }} -k ${{ secrets.KEY }} ${{ github.event.inputs.args }}
