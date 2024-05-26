@@ -90,13 +90,13 @@ jobs:
           if [ -n "$LIMIT" ]; then
             COMMAND="${COMMAND} -limit ${LIMIT}"
           fi
-          if [ -n "$UPDATE_CONFIG" = "true" ]; then
+          if [ "$UPDATE_CONFIG" = "true" ]; then
             COMMAND="${COMMAND} -update-config"
           fi
-          if [ -n "$INI_CONFIG" = "true" ]; then
+          if [ "$INI_CONFIG" = "true" ]; then
             COMMAND="${COMMAND} -ini-config"
           fi
-          if [ -n "$GET_DLC" = "true" ]; then
+          if [ "$GET_DLC" = "true" ]; then
             COMMAND="${COMMAND} -get-dlc"
           fi
           echo "运行命令: $COMMAND"
