@@ -27,18 +27,29 @@ on:
       time:
         description: Update wait time
         required: true
-        default: 86400
+        default: 1
       limit:
         description: limit
-        required: true
-        default: 2000
+        required: false
+      update-config:
+        description: update-config
+        required: false
+        type: boolean
+      ini-config:
+        description: ini-config
+        required: false
+        type: boolean
+      get-dlc:
+        description: get-dlc
+        required: false
+        type: boolean
       args:
         description: args
         required: false
     branches:
       - main
   schedule:
-    - cron: '0 */6 * * *'
+    - cron: '0 3 * * *'
 concurrency:
   group: wait
   cancel-in-progress: false
@@ -62,4 +73,26 @@ jobs:
       - run: |
           git config --local user.name github-actions[bot]
           git config --local user.email 41898282+github-actions[bot]@users.noreply.github.com
-          python main.py -l ${{ github.event.inputs.level || 'INFO' }} -p ${{ github.event.inputs.pool || 8 }} -r ${{ github.event.inputs.retry || 3 }} -t ${{ github.event.inputs.time || 86400 }} -limit ${{ github.event.inputs.limit || 2000 }} -k ${{ secrets.KEY }} ${{ github.event.inputs.args }}
+          LEVEL="${{ github.event.inputs.level }}"
+          POOL="${{ github.event.inputs.pool }}"
+          RETRY="${{ github.event.inputs.retry }}"
+          TIME="${{ github.event.inputs.time }}"
+          LIMIT="${{ github.event.inputs.limit }}"
+          UPDATE_CONFIG="${{ github.event.inputs.update-config }}"
+          INI_CONFIG="${{ github.event.inputs.ini-config }}"
+          GET_DLC="${{ github.event.inputs.get-dlc }}"
+          ARGS="${{ github.event.inputs.args }}"
+          COMMAND="python main.py -l ${LEVEL} -p ${POOL} -r ${RETRY} -t ${TIME} -k ${{ secrets.KEY }} ${ARGS}"
+          if [ -n "$LIMIT" ]; then
+            COMMAND="${COMMAND} -limit ${LIMIT}"
+          fi
+          if [ -n "$UPDATE_CONFIG" ]; then
+            COMMAND="${COMMAND} -update-config"
+          fi
+          if [ -n "$INI_CONFIG" ]; then
+            COMMAND="${COMMAND} -ini-config"
+          fi
+          if [ -n "$GET_DLC" ]; then
+            COMMAND="${COMMAND} -get-dlc"
+          fi
+          $COMMAND
