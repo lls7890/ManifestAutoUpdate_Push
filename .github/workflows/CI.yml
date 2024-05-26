@@ -99,4 +99,5 @@ jobs:
           if [ -n "$GET_DLC" ]; then
             COMMAND="${COMMAND} -get-dlc"
           fi
+          echo "运行命令: $COMMAND"
           $COMMAND
