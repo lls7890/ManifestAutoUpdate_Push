@@ -70,9 +70,13 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
-      - run: |
+      - name: 配置Git
+        run: |
           git config --local user.name github-actions[bot]
           git config --local user.email 41898282+github-actions[bot]@users.noreply.github.com
+      - name: 运行主脚本
+        shell: bash
+        run: |
           LEVEL="${{ github.event.inputs.level }}"
           POOL="${{ github.event.inputs.pool }}"
           RETRY="${{ github.event.inputs.retry }}"
