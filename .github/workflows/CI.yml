@@ -27,7 +27,7 @@ on:
       time:
         description: Update wait time
         required: true
-        default: 1
+        default: 86400
       limit:
         description: limit
         required: false
@@ -77,10 +77,10 @@ jobs:
       - name: 运行主脚本
         shell: bash
         run: |
-          LEVEL="${{ github.event.inputs.level }}"
-          POOL="${{ github.event.inputs.pool }}"
-          RETRY="${{ github.event.inputs.retry }}"
-          TIME="${{ github.event.inputs.time }}"
+          LEVEL="${{ github.event.inputs.level || 'INFO' }}"
+          POOL="${{ github.event.inputs.pool || 8 }}"
+          RETRY="${{ github.event.inputs.retry || 3 }}"
+          TIME="${{ github.event.inputs.time || 1 }}"
           LIMIT="${{ github.event.inputs.limit }}"
           UPDATE_CONFIG="${{ github.event.inputs.update-config }}"
           INI_CONFIG="${{ github.event.inputs.ini-config }}"
