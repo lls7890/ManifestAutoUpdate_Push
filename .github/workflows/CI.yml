@@ -43,6 +43,10 @@ on:
         description: get-dlc
         default: false
         type: boolean
+      fetch:
+        description: fetch
+        default: false
+        type: boolean
       args:
         description: args
         required: false
@@ -85,6 +89,7 @@ jobs:
           UPDATE_CONFIG="${{ github.event.inputs.update-config }}"
           INI_CONFIG="${{ github.event.inputs.ini-config }}"
           GET_DLC="${{ github.event.inputs.get-dlc }}"
+          FETCH="${{ github.event.inputs.fetch }}"
           ARGS="${{ github.event.inputs.args }}"
           COMMAND="python main.py -l ${LEVEL} -p ${POOL} -r ${RETRY} -t ${TIME} -k ${{ secrets.KEY }} ${ARGS}"
           if [ -n "$LIMIT" ]; then
@@ -98,6 +103,9 @@ jobs:
           fi
           if [ "$GET_DLC" = "true" ]; then
             COMMAND="${COMMAND} -get-dlc"
+          fi
+          if [ "$FETCH" = "true" ]; then
+            COMMAND="${COMMAND} -fetch"
           fi
           echo "运行命令: $COMMAND"
           $COMMAND
