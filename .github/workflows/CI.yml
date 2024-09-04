@@ -19,7 +19,7 @@ on:
       pool:
         description: Number of threads
         required: true
-        default: 8
+        default: 16
       retry:
         description: Number of retries
         required: true
