@@ -82,7 +82,7 @@ jobs:
         shell: bash
         run: |
           LEVEL="${{ github.event.inputs.level || 'INFO' }}"
-          POOL="${{ github.event.inputs.pool || 8 }}"
+          POOL="${{ github.event.inputs.pool || 16 }}"
           RETRY="${{ github.event.inputs.retry || 3 }}"
           TIME="${{ github.event.inputs.time || 1 }}"
           LIMIT="${{ github.event.inputs.limit }}"
