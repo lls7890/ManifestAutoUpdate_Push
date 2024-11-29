@@ -1,0 +1,115 @@
+name: CI
+on:
+  workflow_dispatch:
+    inputs:
+      level:
+        description: Logging Level
+        required: true
+        default: INFO
+        type: choice
+        options:
+          - CRITICAL
+          - FATAL
+          - ERROR
+          - WARNING
+          - WARN
+          - INFO
+          - DEBUG
+          - NOTSET
+      pool:
+        description: Number of threads
+        required: true
+        default: 16
+      retry:
+        description: Number of retries
+        required: true
+        default: 3
+      time:
+        description: Update wait time
+        required: true
+        default: 86400
+      limit:
+        description: limit
+        required: false
+      update-config:
+        description: update-config
+        default: false
+        type: boolean
+      ini-config:
+        description: ini-config
+        default: false
+        type: boolean
+      get-dlc:
+        description: get-dlc
+        default: false
+        type: boolean
+      fetch:
+        description: fetch
+        default: false
+        type: boolean
+      args:
+        description: args
+        required: false
+    branches:
+      - main
+  schedule:
+    - cron: '0 19 * * *'
+concurrency:
+  group: wait
+  cancel-in-progress: false
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 1
+          repository: lls7890/MyManifestAutoUpdate
+          token: ${{ secrets.TOKEN_FOR_OTHER_REPO }}
+          ref: dev
+      - name: Sync time
+        run: |
+          powershell -Command "w32tm /resync"
+      - name: Set up Python 3.10
+        uses: actions/setup-python@v3
+        with:
+          python-version: "3.10"
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+      - name: Git
+        run: |
+          git config --local user.name github-actions[bot]
+          git config --local user.email 41898282+github-actions[bot]@users.noreply.github.com
+      - name: Run
+        shell: bash
+        run: |
+          LEVEL="${{ github.event.inputs.level || 'INFO' }}"
+          POOL="${{ github.event.inputs.pool || 16 }}"
+          RETRY="${{ github.event.inputs.retry || 3 }}"
+          TIME="${{ github.event.inputs.time || 1 }}"
+          LIMIT="${{ github.event.inputs.limit }}"
+          UPDATE_CONFIG="${{ github.event.inputs.update-config }}"
+          INI_CONFIG="${{ github.event.inputs.ini-config }}"
+          GET_DLC="${{ github.event.inputs.get-dlc }}"
+          FETCH="${{ github.event.inputs.fetch }}"
+          ARGS="${{ github.event.inputs.args }}"
+          COMMAND="python main.py -l ${LEVEL} -p ${POOL} -r ${RETRY} -t ${TIME} -k ${{ secrets.KEY }} ${ARGS}"
+          if [ -n "$LIMIT" ]; then
+            COMMAND="${COMMAND} -limit ${LIMIT}"
+          fi
+          if [ "$UPDATE_CONFIG" = "true" ]; then
+            COMMAND="${COMMAND} -update-config"
+          fi
+          if [ "$INI_CONFIG" = "true" ]; then
+            COMMAND="${COMMAND} -ini-config"
+          fi
+          if [ "$GET_DLC" = "true" ]; then
+            COMMAND="${COMMAND} -get-dlc"
+          fi
+          if [ "$FETCH" = "true" ]; then
+            COMMAND="${COMMAND} -fetch"
+          fi
+          echo "command: $COMMAND"
+          $COMMAND
