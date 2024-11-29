@@ -6,8 +6,6 @@ on:
         description: repo
         required: true
         default: 'https://github.com/lls7890/MyManifestAutoUpdate'
-    branches:
-      - main
   schedule:
     - cron: '0 16 * * *'
 concurrency:

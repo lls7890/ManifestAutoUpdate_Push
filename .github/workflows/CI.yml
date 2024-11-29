@@ -50,8 +50,6 @@ on:
       args:
         description: args
         required: false
-    branches:
-      - main
   schedule:
     - cron: '0 19 * * *'
 concurrency:
@@ -66,9 +64,6 @@ jobs:
           fetch-depth: 1
           repository: lls7890/MyManifestAutoUpdate
           token: ${{ secrets.TOKEN_FOR_OTHER_REPO }}
-      - name: Sync time
-        run: |
-          powershell -Command "w32tm /resync"
       - name: Set up Python 3.10
         uses: actions/setup-python@v3
         with:

@@ -31,8 +31,6 @@ on:
       args:
         description: args
         required: false
-    branches:
-      - main
   schedule:
     - cron: '0 */3 * * *'
 concurrency:
