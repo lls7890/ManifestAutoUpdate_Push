@@ -51,7 +51,7 @@ on:
         description: args
         required: false
   schedule:
-    - cron: '0 19 * * *'
+    - cron: '0 */4 * * *'
 concurrency:
   group: wait
   cancel-in-progress: false
