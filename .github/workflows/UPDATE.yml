@@ -32,8 +32,7 @@ on:
         description: args
         required: false
   schedule:
-    - cron: "20 1-23/4 * * *"
-    - cron: "40 2-23/4 * * *"
+    - cron: "0 0,4,12,16 * * *"
 concurrency:
   group: wait
   cancel-in-progress: false
